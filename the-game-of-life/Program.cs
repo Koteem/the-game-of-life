@@ -16,7 +16,8 @@ namespace the_game_of_life
             Raylib.InitWindow(width, height, "The game of life");
             Raylib.SetTargetFPS(60);
 
-            double timer = 0;
+            double startTimer = 0;
+            double pauseTimer = 0;
 
             while (!Raylib.WindowShouldClose())
             {
@@ -61,16 +62,27 @@ namespace the_game_of_life
                         int[,] temp = new int[(int)(width/cellSize), (int)(height/cellSize)];
                         map = temp;
                     }
-                    if(Raylib.IsKeyDown(KeyboardKey.S))
-                    { 
-                        started = true;
-                        timer = 2;
-                    }
                 }
-                if(timer > 0)
+                if(Raylib.IsKeyPressed(KeyboardKey.S))
+                    { 
+                        started = !started;
+                        if(started){
+                            startTimer = 2;
+                            pauseTimer = 0;
+                        }
+                        else{
+                            startTimer = 0;
+                            pauseTimer = 2;
+                        }
+                    }
+                if(startTimer > 0)
                 {
                     ShowText("Simulation started", 40);
-                    timer -= Raylib.GetFrameTime();
+                    startTimer -= Raylib.GetFrameTime();
+                }else if(pauseTimer > 0)
+                {
+                    ShowText("Simulation paused", 40);
+                    pauseTimer += Raylib.GetFrameTime();
                 }
                 Raylib.EndDrawing();
             }
